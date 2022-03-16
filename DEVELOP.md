@@ -9,7 +9,7 @@ we recommend installing it for project development.
 
 ## Project Structure
 
-- [`src/nbnursery`](src/nbnursery) Python source code to grading scripts
+- [`src/aibuilders_exam`](src/aibuilders_exam) Python source code to grading scripts
 - [`exam.ipynb`](exam.ipynb) Jupyter notebook containing exam questions
 - [`grade.py`](grade.py) Grading script for [`exam.ipynb`](exam.ipynb)
 

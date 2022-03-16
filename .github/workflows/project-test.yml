@@ -69,4 +69,6 @@ jobs:
         run: poetry install --no-interaction
       - name: Notebook grading
         run: |
-          poetry run ./grade.py exam.ipynb --force-color --width 120
+          mkdir ${{ runner.temp }}/sandbox
+          cp exam.ipynb ${{ runner.temp }}/sandbox
+          poetry run ./grade.py ${{ runner.temp }}/sandbox/exam.ipynb --force-color --width 120

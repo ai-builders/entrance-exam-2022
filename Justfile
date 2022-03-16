@@ -19,8 +19,8 @@ export-requirements:
 #  \___\___/\__,_\___|  \__\_\\_,_\__,_|_|_|\__|\_, |   |_|\___/\___/_/__/
 #                                               |__/
 
-# Run tests against source files (flake8 and pytest)
-test: flake8
+# Run checks against source files (flake8 and pytest)
+check: flake8
 
 # Run flake8 linter against source files
 flake8:

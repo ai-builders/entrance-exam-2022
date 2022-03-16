@@ -15,7 +15,7 @@ from rich.padding import Padding
 from rich.syntax import Syntax
 from rich.text import Text
 
-from nbnursery.helpers import code_contains_identifier, rich_time
+from aibuilders_exam.helpers import code_contains_identifier, rich_time
 
 __all__ = ['NotebookLoader']
 
@@ -82,6 +82,8 @@ class NotebookLoader:
                         self.console.print(rich_time(), core_message)
                     continue
                 # Run the code in the module
+                # TODO: Capture output with contextlib.redirect_stdout
+                # https://docs.python.org/3/library/contextlib.html#contextlib.redirect_stdout
                 exec(code, mod.__dict__)
         finally:
             self.shell.user_ns = save_user_ns

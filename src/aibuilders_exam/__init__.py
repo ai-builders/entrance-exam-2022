@@ -8,4 +8,4 @@ if sys.version_info >= (3, 8):
 else:
     import importlib_metadata as metadata
 
-__version__ = metadata.version("notebook-grading")
+__version__ = metadata.version("aibuilders-exam")

@@ -6,7 +6,7 @@ import importlib
 import inspect
 import unittest
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from types import ModuleType
 from typing import Any, TypeVar
 
@@ -17,8 +17,8 @@ from rich.text import Text
 from rich.traceback import Traceback
 from typing_extensions import Literal, ParamSpec
 
-from nbnursery.config import ApplicationContext
-from nbnursery.helpers import BriefTraceback, assert_never, inflect_engine, rich_time
+from aibuilders_exam.grading.context import ApplicationContext
+from aibuilders_exam.helpers import BriefTraceback, assert_never, inflect_engine, rich_time
 
 __all__ = [
     'ExecArg', 'ModuleItem', 'Param', 'TestScenario',
@@ -123,7 +123,7 @@ class TestCase:
             self.test_scenario.wrapped_func(*exec_args)
         except:  # noqa
             traceback_cls = Traceback if ctx.show_stack_trace else BriefTraceback
-            suppressed_modules = [unittest, pytest, importlib.import_module('nbnursery')]
+            suppressed_modules = [unittest, pytest, importlib.import_module('aibuilders_exam')]
             traceback = traceback_cls(suppress=suppressed_modules)
             return TestCaseResult(self, 'mistake', traceback)
         else:
@@ -189,6 +189,14 @@ class TestGroup:
             tc_results.append(result)
         return TestGroupResult(self, is_accepted, tc_results)
 
+    def do_skip(self) -> TestGroupResult:
+        """Returns the result as if the test was skipped"""
+        tc_results = [
+            test_case.do_skip()
+            for test_case in self.all_test_cases
+        ]
+        return TestGroupResult(self, False, tc_results)
+
 
 @dataclass
 class TestGroupResult:
@@ -252,11 +260,19 @@ class TestSuite:
             ctx.console.print(result.rich_message())
         return TestSuiteResult(tg_results)
 
+    def do_skip(self) -> TestSuiteResult:
+        """Returns the result as if the test was skipped"""
+        tg_results = [
+            test_group.do_skip()
+            for test_group in self.test_groups
+        ]
+        return TestSuiteResult(tg_results)
+
 
 @dataclass
 class TestSuiteResult:
     """Keeps track of grading a collection of test groups"""
-    tg_results: list[TestGroupResult] = field(default_factory=list)
+    tg_results: list[TestGroupResult]
 
     @property
     def total_weight(self) -> int:

@@ -12,10 +12,10 @@ import numpy as np
 import pandas as pd
 from pytest import approx
 
-from nbnursery.config import ApplicationContext
-from nbnursery.helpers import rich_time, validate_pos
-from nbnursery.loader import NotebookLoader
-from nbnursery.testutils import ModuleItem, Param, TestGroup, TestScenario, TestSuite
+from aibuilders_exam.grading.context import ApplicationContext
+from aibuilders_exam.grading.engine import ModuleItem, Param, TestGroup, TestScenario, TestSuite
+from aibuilders_exam.grading.loader import NotebookLoader
+from aibuilders_exam.helpers import rich_time, validate_pos
 
 unit_testing = unittest.TestCase()
 
@@ -83,6 +83,9 @@ def program(
         mod = nb_loader.load_module(module_name, notebook_file)
     except Exception as exc:
         ctx.console.print_exception()
+        if export_json:
+            with open(export_json, "w") as f:
+                json.dump(TEST_SUITE.do_skip().serialize(), f, ensure_ascii=False, indent=2)
         raise SystemExit(1) from exc
 
     # Execute the entire test suite and print the score summary
@@ -287,7 +290,7 @@ TEST_SUITE = TestSuite([
         ]),
         test_filter_matching.data([], "x", 2, []),
     ]),
-    TestGroup("2.2 Wordle Matching", 10, [
+    TestGroup("2.2 Wordle Absence", 10, [
         test_filter_absence.data(["hippo", "zebra", "panda", "koala"], "a", ["hippo"]),
         test_filter_absence.data(["zebra", "panda", "koala"], "a", []),
         test_filter_absence.data(["hippo", "zebra", "panda", "koala"], "x", ["hippo", "zebra", "panda", "koala"]),
